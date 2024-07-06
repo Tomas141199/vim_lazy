@@ -101,6 +101,18 @@ return {
 					end,
 				})
 			end,
+			lspconfig["astro"].setup({
+				capabilities = capabilities,
+				on_attach = function(client, bufnr)
+					vim.api.nvim_create_autocmd("BufWritePost", {
+						pattern = { "*.astro" },
+						callback = function(ctx)
+							client.notify("$/onDidChangeAstroFile", { uri = ctx.file })
+						end,
+					})
+				end,
+				filetypes = { "astro" },
+			}),
 			["graphql"] = function()
 				-- configure graphql language server
 				lspconfig["graphql"].setup({
